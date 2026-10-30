@@ -1,0 +1,10 @@
+{
+  "name": "school/qr-attendance-elementary",
+  "description": "QRAttendance - Elementary/Primary-only build (professor + student)",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "ext-pdo": "*",
+    "chillerlan/php-qrcode": "^6.0"
+  }
+}

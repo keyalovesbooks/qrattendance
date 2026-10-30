@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Background of the Study · QR-Based Class Attendance (Mobile-based)</title>
+<style>
+  :root { --navy:#102858; --blue:#3261df; --ink:#17243c; --muted:#7c899d; --line:#e9edf3; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0 0 60px; color:var(--ink); background:#f5f7fb;
+         font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+         line-height:1.75; font-size:15px; }
+  .wrap { width:min(880px,100%); margin:0 auto; padding:0 22px; }
+  header.cover { padding:52px 0 34px; color:#fff;
+    background:radial-gradient(ellipse at 84% 12%, rgba(120,160,255,.34), transparent 33%), linear-gradient(145deg,#122a5c,#0f2756 55%,#0a1d41); }
+  .mark { display:inline-flex; align-items:center; gap:10px; font-weight:750; letter-spacing:-.6px; font-size:17px; }
+  .mark i { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; font-style:normal;
+            font-size:12px; background:linear-gradient(140deg,#5d8bff,#3470f4); }
+  header h1 { margin:28px 0 8px; font-size:clamp(26px,4.6vw,40px); line-height:1.15; letter-spacing:-1.4px; }
+  header h1 span { color:#8bacff; }
+  header p { max-width:620px; margin:0; color:#c5d2ee; font-size:14px; }
+  header .meta { display:flex; flex-wrap:wrap; gap:18px; margin-top:22px; padding-top:15px;
+                 border-top:1px solid rgba(255,255,255,.14); color:#9fb3d8; font-size:11px; }
+  main { padding:28px 0 0; }
+  .toolbar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:8px; margin:0 -22px 26px;
+             padding:11px 22px; background:rgba(245,247,251,.95); border-bottom:1px solid var(--line); backdrop-filter:blur(8px); }
+  .btn { display:inline-flex; align-items:center; gap:7px; min-height:38px; padding:0 14px; border:1px solid #e2e8f0;
+         border-radius:8px; background:#fff; color:#44536b; font-size:13px; font-weight:620; text-decoration:none; cursor:pointer; }
+  .btn:hover { border-color:#c8d6f5; color:var(--blue); }
+  .btn.primary { border-color:transparent; color:#fff; background:linear-gradient(110deg,#3d6fea,#3261df); }
+  section { margin:0 0 32px; }
+  h2 { display:flex; align-items:center; gap:11px; margin:0 0 13px; padding-bottom:9px;
+       border-bottom:2px solid var(--line); font-size:21px; letter-spacing:-.5px; color:var(--navy); }
+  h2 em { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:9px; font-style:normal;
+          font-size:13px; color:var(--blue); background:#edf3ff; }
+  h3 { margin:20px 0 7px; font-size:15.5px; color:#26364f; }
+  p { margin:0 0 13px; color:#44536b; text-align:justify; }
+  ol, ul { margin:0 0 14px; padding-left:23px; color:#44536b; }
+  li { margin-bottom:8px; }
+  .lead { font-size:15.5px; color:#3d4d66; }
+  .note { padding:12px 14px; border:1px solid #d8e6ff; border-radius:9px; background:#f0f5ff; color:#46619a; font-size:14px; }
+  table { width:100%; border-collapse:collapse; margin:0 0 16px; background:#fff; font-size:13.5px; }
+  th, td { padding:9px 11px; border:1px solid var(--line); text-align:left; vertical-align:top; }
+  th { color:#5b6b83; font-size:11px; letter-spacing:.05em; text-transform:uppercase; background:#fafbfe; }
+  code { padding:2px 6px; border:1px solid #e3e9f3; border-radius:5px; background:#f4f7fd; color:#2f55ad;
+         font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+  pre { overflow-x:auto; padding:16px; border:1px solid var(--line); border-radius:11px; background:#0f2247; color:#cfe0ff;
+        font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.55; }
+  .two { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:14px; }
+  .card { padding:15px 17px; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 3px 15px rgba(21,43,80,.045); }
+  .card b { display:block; margin-bottom:4px; color:#2c3d57; font-size:14px; }
+  .card p { margin:0; font-size:13.5px; color:#66768d; }
+  footer { margin-top:34px; padding-top:16px; border-top:1px solid var(--line); color:#93a0b1; font-size:11.5px; }
+  @media (max-width:640px) { .toolbar { position:static; } p { text-align:left; } }
+  @media print {
+    @page { margin:16mm; }
+    body { background:#fff; font-size:11.5pt; line-height:1.6; }
+    .toolbar, .no-print { display:none !important; }
+    header.cover { padding:0 0 14px; color:#000; background:none; }
+    header h1 { font-size:24pt; color:#000; }
+    header h1 span, header p, header.meta { color:#333; }
+    header .meta { border-top:1px solid #ccc; }
+    .card, table, .note, pre { break-inside:avoid; }
+    h2 { break-after:avoid; }
+    pre { background:#f7f7f7; color:#000; border:1px solid #ccc; }
+    a { color:inherit; text-decoration:none; }
+  }
+</style>
+</head>
+<body>
+<header class="cover">
+  <div class="wrap">
+    <span class="mark"><i>QR</i> qrattendance</span>
+    <h1>Background of the Study<br><span>QR-Based Class Attendance — Mobile-based</span></h1>
+    <p>Mobile documentation — rationale derived from the web-based study, mobile blueprint, mobile development tools and mobile development phases.</p>
+    <div class="meta"><span>Format: Outline 1–4</span><span>Implementation: Mobile-based</span><span id="printed"></span></div>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+  <div class="toolbar no-print">
+    <button class="btn primary" onclick="window.print()">Print</button>
+    <a class="btn" href="../settings.php">Back to settings</a>
+  </div>
+
+  <section id="rationale">
+    <h2><em>1</em> Rationale <span style="font-size:13px;color:#8b98ab">(from Web Based)</span></h2>
+    <p class="lead">The rationale of the mobile-based application is carried over from the web-based study, which established that conventional attendance consumes five to ten minutes of every class meeting, produces handwritten records that are difficult to read, aggregate and report, and cannot prevent proxy attendance. The web-based system answered those problems with QR codes and RFID, but it is accessed through a browser — a step that is awkward at exactly the moment attendance matters most: standing at the classroom door.</p>
+
+    <p>The mobile application therefore inherits the same problem statement and addresses the friction that remains after moving from paper to a browser. Three observations support taking the work to a phone.</p>
+
+    <p><b>First, students are mobile-first.</b> Most enrolment, announcement and learning-management traffic in schools already reaches students on a phone rather than a desktop. A web page that must be typed into a mobile browser, found in history, signed into, and refreshed is a poor fit for the one to three seconds a student has while walking into a room. A native application keeps the session, the class list and the camera control together, so generating a QR pass or tapping a card reader becomes a single action.</p>
+
+    <p><b>Second, connectivity in classrooms is unreliable.</b> Lecture rooms and corridors are the least predictable parts of a campus network. A browser session that drops mid-request leaves an ambiguous result — the student does not know whether the check-in was recorded. A mobile client can queue a check-in, retry it, and show a definite state to the student, while still writing the server's timestamp so the record remains consistent.</p>
+
+    <p><b>Third, a phone already carries the two capture devices the system needs.</b> The camera handles QR codes; Bluetooth or camera scanning can pair the ESP32 reader without opening a laptop. A mobile app can also use device-local storage to remember the student's identity and recent passes, and can notify the student when a professor opens a session — a capability a plain web page cannot deliver reliably across mobile browsers.</p>
+
+    <p>The study therefore develops a <b>mobile-based companion</b> for the same attendance system: a phone application where students sign in, view their classes and schedules, generate their time-limited QR pass, scan the section enrolment code, and review attendance history — while the professor's web dashboard and the door-side ESP32 reader continue to share the same database. The rationale is not to replace the web system but to remove the last barrier between a student and an accurate attendance record.</p>
+
+    <div class="note"><b>Problem statement:</b> a browser-based system still requires navigation, a live connection and a familiar user session at the classroom door; a mobile application is needed so a student can check in with one tap, tolerate weak connectivity, and be notified when attendance opens.</div>
+  </section>
+
+  <section id="blueprint">
+    <h2><em>2</em> Blueprint <span style="font-size:13px;color:#8b98ab">(Mobile Based)</span></h2>
+    <p>The mobile application is a <b>thick client</b> on the existing three-tier architecture: it replaces the browser as the presentation tier while sharing the same PHP logic and MySQL data. It does not own a separate database — one source of truth prevents the web and mobile records from diverging.</p>
+
+    <pre>
+┌────────────────────────────────────────────┐
+│        MOBILE APP (Flutter / Android)      │
+│  auth · classes · schedules · history      │
+│  QR generator · camera scanner · offline   │
+└───────────────┬────────────────────────────┘
+                │ HTTPS · JSON (REST) · Bearer token
+                ▼
+┌────────────────────────────────────────────┐
+│  ESP32 door reader (unchanged)             │
+│  MFRC522 card → hashed UID → device token  │
+└───────────────┬────────────────────────────┘
+                ▼
+┌────────────────────────────────────────────┐
+│  LOGIC TIER — Apache + PHP 8.2             │
+│  web pages + /api/mobile/* REST endpoints  │
+│  token validation · one-time QR issuance   │
+│  session ownership · rate limits · sync    │
+└───────────────┬────────────────────────────┘
+                ▼
+┌────────────────────────────────────────────┐
+│  DATA TIER — MySQL / MariaDB (shared)      │
+│  terms · sections · students · sessions ·  │
+│  qr_tokens · attendance · rfid_readers     │
+└────────────────────────────────────────────┘</pre>
+
+    <h3>2.1 Mobile modules</h3>
+    <div class="two">
+      <div class="card"><b>Authentication</b><p>Same credential rules as the web; the server issues a revocable bearer token stored in secure storage, replacing the browser session cookie.</p></div>
+      <div class="card"><b>Class &amp; schedule</b><p>Sections, meeting days and times read from the shared database, scoped to the signed-in student.</p></div>
+      <div class="card"><b>QR pass</b><p>Requested from the server when a session opens; rendered on device with a live countdown that matches the server expiry.</p></div>
+      <div class="card"><b>Enrolment</b><p>Camera scans the section QR shown on the professor's screen; the student ID is confirmed in the app.</p></div>
+      <div class="card"><b>Reader pairing</b><p>The professor may pair or revoke ESP32 readers from a phone without opening a laptop.</p></div>
+      <div class="card"><b>Offline resilience</b><p>Cached class list; a pending check-in is queued and retried, so the app always shows a definite state.</p></div>
+      <div class="card"><b>Notifications</b><p>Optional local/push notification when a session opens for an enrolled section.</p></div>
+      <div class="card"><b>History</b><p>Attendance records with date, method (QR/RFID) and status, filtered by academic term.</p></div>
+    </div>
+
+    <h3>2.2 REST contract between app and server</h3>
+    <table>
+      <tr><th>Endpoint</th><th>Method</th><th>Purpose</th></tr>
+      <tr><td><code>/api/mobile/login.php</code></td><td>POST</td><td>Exchange email/password for a bearer token</td></tr>
+      <tr><td><code>/api/mobile/classes.php</code></td><td>GET</td><td>Student's sections, schedules and open sessions</td></tr>
+      <tr><td><code>/api/mobile/pass.php</code></td><td>POST</td><td>Issue a time-limited, single-use QR pass</td></tr>
+      <tr><td><code>/api/mobile/enroll.php</code></td><td>POST</td><td>Join a section from a scanned enrolment code</td></tr>
+      <tr><td><code>/api/mobile/history.php</code></td><td>GET</td><td>Attendance records for the signed-in student</td></tr>
+      <tr><td><code>/api/mobile/reader.php</code></td><td>POST/GET</td><td>Pair, list and revoke ESP32 readers (professor)</td></tr>
+      <tr><td><code>/api/mobile/state.php</code></td><td>GET</td><td>Reader status and last taps (professor, polled)</td></tr>
+    </table>
+
+    <div class="note"><b>Design principle:</b> validation stays on the server. The mobile app never decides attendance — it only presents a pass and sends a token. That keeps web, mobile and RFID check-ins under one set of rules (expiry, single use, section ownership, rate limiting).</div>
+  </section>
+
+  <section id="tools">
+    <h2><em>3</em> Software Development Tools <span style="font-size:13px;color:#8b98ab">(Mobile)</span></h2>
+    <p><b>Flutter with Dart</b> is chosen as the primary framework because it compiles a single codebase to Android and iOS, while giving the student interface full access to the camera for QR generation and scanning. Native Android (Kotlin) remains a viable alternative if only one platform is required.</p>
+    <table>
+      <tr><th>Category</th><th>Tool</th><th>Purpose in the study</th></tr>
+      <tr><td>Framework</td><td><b>Flutter 3.x</b> + <b>Dart 3</b></td><td>Cross-platform UI for Android and iOS from one codebase</td></tr>
+      <tr><td>IDE</td><td><b>Android Studio</b> (+ Android SDK), <b>VS Code</b></td><td>Build, debug and emulator testing</td></tr>
+      <tr><td>QR rendering</td><td><b>qr_flutter</b></td><td>Draws the server-issued pass as a QR image on screen</td></tr>
+      <tr><td>QR scanning</td><td><b>mobile_scanner</b> (ML Kit / AVFoundation)</td><td>Reads the section enrolment code from the camera</td></tr>
+      <tr><td>Networking</td><td><b>dio</b> / <b>http</b></td><td>REST calls with bearer-token auth, retries and timeouts</td></tr>
+      <tr><td>State</td><td><b>Riverpod</b> or <b>Provider</b></td><td>Manages session, class list and offline queue state</td></tr>
+      <tr><td>Local storage</td><td><b>shared_preferences</b> + <b>drift/sqflite</b></td><td>Secure token storage and offline cache of classes/schedules</td></tr>
+      <tr><td>Permissions</td><td><b>permission_handler</b></td><td>Camera and notification permission prompts</td></tr>
+      <tr><td>Notifications</td><td><b>firebase_messaging</b> / <b>flutter_local_notifications</b></td><td>Alert when a professor opens an attendance session</td></tr>
+      <tr><td>Testing</td><td><b>flutter test</b>, <b>integration_test</b>, Android Emulator</td><td>Unit, widget and device-level testing</td></tr>
+      <tr><td>Backend</td><td><b>PHP 8.2</b> REST endpoints, <b>PDO</b>, <b>MySQL/MariaDB</b></td><td>The same logic and data tiers as the web system</td></tr>
+      <tr><td>Distribution</td><td><b>GitHub Actions</b>, <b>Firebase App Distribution</b>, APK / AAB</td><td>Build artefacts and tester distribution</td></tr>
+      <tr><td>Design</td><td><b>Figma</b> (wireframes), <b>lucide_icons</b></td><td>Interface design and the icon set shared with the web UI</td></tr>
+      <tr><td>Version control</td><td><b>Git</b> / <b>GitHub</b></td><td>Source history for app and API together</td></tr>
+    </table>
+  </section>
+
+  <section id="phases">
+    <h2><em>4</em> Software Development Phases <span style="font-size:13px;color:#8b98ab">(Mobile Development)</span></h2>
+    <p>The mobile application follows the same SDLC as the web study, with the platform-selection and device-testing steps expanded — a distinct sequence sometimes called the <b>mobile application development life cycle</b>.</p>
+
+    <h3>Phase 1 — Requirements and Platform Selection</h3>
+    <p>Collected the requirements carried over from the web study (role-based sign-in, class and schedule views, time-limited QR pass, enrolment by code, history) plus mobile-specific ones: camera permission flow, fast launch from a locked screen, low-data operation, offline display, and device storage for credentials. Compared Flutter, React Native and native Android against the school's skill set and the single-team constraint; Flutter was selected for one codebase and strong camera/QR packages.</p>
+
+    <h3>Phase 2 — Architecture and API Contract</h3>
+    <p>Defined the client–server split: the app presents and caches, the server validates and stores. Specified JSON endpoint schemas, bearer-token authentication with revocation, error codes for expired or duplicate passes, and the offline queue protocol (unique request ID so a retried check-in cannot create a duplicate row). Produced the system and activity diagrams for: student enrolment, QR check-in, and reader pairing.</p>
+
+    <h3>Phase 3 — UI/UX Design</h3>
+    <p>Converted the web blueprint into mobile screens: bottom navigation for Home / Classes / Attendance, a full-screen pass view with a live countdown, and a large camera frame for enrolment. Wireframes were produced first, then applied to Material widgets using the same blue palette, Lucide icons and typography as the web dashboard so the two interfaces read as one system.</p>
+
+    <h3>Phase 4 — Core Implementation</h3>
+    <p>Built in dependency order: splash and authentication (secure token storage), the dashboard with cached classes, the class list with schedules, and the profile. Every screen was wired to the REST endpoints and verified against the existing web database.</p>
+
+    <h3>Phase 5 — Feature Integration</h3>
+    <p>Added the QR pass renderer tied to server-issued expiry, the camera-based enrolment scanner, the offline queue with retry, professor-side reader management, and optional session notifications. Integrated the same conflict and validation rules already enforced by the web API rather than duplicating them.</p>
+
+    <h3>Phase 6 — Testing</h3>
+    <p>Executed unit tests for models and state, widget tests for screen behaviour, and integration tests against a staging API. Device-level testing covered the camera permission path, QR readability across screen brightness, weak/lost connectivity and retry, cold launch, and emulator plus physical handset on Android 8–14 (and iOS where supported). Usability testing asked students to perform a check-in and timed it against the browser flow.</p>
+
+    <h3>Phase 7 — Packaging, Deployment and Maintenance</h3>
+    <p>Signed and packaged the build as AAB/APK (and IPA for iOS), distributed to testers, submitted to the chosen distribution channel where required, then released the version matching the deployed API. Maintenance covers store privacy declarations, operating-system camera/permission changes, API compatibility, and collecting user feedback for iteration.</p>
+
+    <div class="note"><b>Outcome:</b> a mobile companion that reduces a student's check-in to a single tap from a phone that is already in their hand, while keeping one authoritative attendance record shared with the web dashboard and the door-side reader.</div>
+  </section>
+
+  <footer>QRAttendance · Background of the Study · Mobile-based implementation</footer>
+</main>
+</div>
+<script>
+  document.getElementById('printed').textContent = 'Printed on ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+</script>
+</body>
+</html>
