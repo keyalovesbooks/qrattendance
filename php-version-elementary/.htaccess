@@ -1,0 +1,46 @@
+# ============================================================================
+# QRAttendance – Apache security configuration
+# Layers: transport security, clickjacking, MIME sniffing, CSP, file access.
+# ============================================================================
+
+# --- 1. Force HTTPS (camera access requires a secure context) -------------
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- 2. Block direct HTTP access to code / dependency folders -------------
+# docs/ and uploads/ are intentionally NOT blocked: the manual and profile
+# pictures are served from them. Script execution inside uploads/ is disabled
+# by uploads/.htaccess instead.
+RewriteRule ^(vendor|\.git)(/|$) - [F,L]
+
+# --- 3. Deny direct access to sensitive single files ----------------------
+# These are only ever included from the filesystem, never requested over HTTP.
+<FilesMatch "^(composer\.(json|lock)|.*\.sql|.*\.md|config\.php|config_rfid_helpers\.php|attendance_modes\.php|migrate\.php|\.htaccess.*)$">
+  Require all denied
+</FilesMatch>
+
+# --- 4. Disable directory listing ----------------------------------------
+Options -Indexes
+
+# --- 5. Security response headers ----------------------------------------
+# Clickjacking
+Header always set X-Frame-Options "SAMEORIGIN"
+# MIME sniffing
+Header always set X-Content-Type-Options "nosniff"
+# Referrer leakage
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+# Legacy XSS filter
+Header always set X-XSS-Protection "1; mode=block"
+# Permissions policy: only the camera is needed (QR scanning)
+Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=()"
+# Content Security Policy.
+# NOTE: 'unsafe-inline' for script-src is required because pages use inline
+# <script> blocks (calendar renderer, scanner config). Inline event handlers
+# are not used anywhere. If all JS is later moved to external files, replace
+# 'unsafe-inline' with a per-request nonce and remove it.
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+# HSTS — only meaningful once HTTPS is confirmed working. Uncomment after
+# verifying the redirect above, then keep it enabled permanently.
+# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
