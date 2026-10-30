@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Background of the Study · QR-Based Class Attendance (Web-based)</title>
+<style>
+  :root { --navy:#102858; --blue:#3261df; --ink:#17243c; --muted:#7c899d; --line:#e9edf3; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0 0 60px; color:var(--ink); background:#f5f7fb;
+         font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+         line-height:1.75; font-size:15px; }
+  .wrap { width:min(880px,100%); margin:0 auto; padding:0 22px; }
+  header.cover { padding:52px 0 34px; color:#fff;
+    background:radial-gradient(ellipse at 86% 12%, rgba(120,160,255,.32), transparent 32%), linear-gradient(145deg,#102858,#122a5c 60%,#0c1e43); }
+  .mark { display:inline-flex; align-items:center; gap:10px; font-weight:750; letter-spacing:-.6px; font-size:17px; }
+  .mark i { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; font-style:normal;
+            font-size:12px; background:linear-gradient(140deg,#5d8bff,#3470f4); }
+  header h1 { margin:28px 0 8px; font-size:clamp(26px,4.6vw,40px); line-height:1.15; letter-spacing:-1.4px; }
+  header h1 span { color:#8bacff; }
+  header p { max-width:620px; margin:0; color:#c5d2ee; font-size:14px; }
+  header .meta { display:flex; flex-wrap:wrap; gap:18px; margin-top:22px; padding-top:15px;
+                 border-top:1px solid rgba(255,255,255,.14); color:#9fb3d8; font-size:11px; }
+  main { padding:28px 0 0; }
+  .toolbar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:8px; margin:0 -22px 26px;
+             padding:11px 22px; background:rgba(245,247,251,.95); border-bottom:1px solid var(--line); backdrop-filter:blur(8px); }
+  .btn { display:inline-flex; align-items:center; gap:7px; min-height:38px; padding:0 14px; border:1px solid #e2e8f0;
+         border-radius:8px; background:#fff; color:#44536b; font-size:13px; font-weight:620; text-decoration:none; cursor:pointer; }
+  .btn:hover { border-color:#c8d6f5; color:var(--blue); }
+  .btn.primary { border-color:transparent; color:#fff; background:linear-gradient(110deg,#3d6fea,#3261df); }
+  section { margin:0 0 32px; }
+  h2 { display:flex; align-items:center; gap:11px; margin:0 0 13px; padding-bottom:9px;
+       border-bottom:2px solid var(--line); font-size:21px; letter-spacing:-.5px; color:var(--navy); }
+  h2 em { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:9px; font-style:normal;
+          font-size:13px; color:var(--blue); background:#edf3ff; }
+  h3 { margin:20px 0 7px; font-size:15.5px; color:#26364f; }
+  p { margin:0 0 13px; color:#44536b; text-align:justify; }
+  ol, ul { margin:0 0 14px; padding-left:23px; color:#44536b; }
+  li { margin-bottom:8px; }
+  .lead { font-size:15.5px; color:#3d4d66; }
+  .note { padding:12px 14px; border:1px solid #d8e6ff; border-radius:9px; background:#f0f5ff; color:#46619a; font-size:14px; }
+  table { width:100%; border-collapse:collapse; margin:0 0 16px; background:#fff; font-size:13.5px; }
+  th, td { padding:9px 11px; border:1px solid var(--line); text-align:left; vertical-align:top; }
+  th { color:#5b6b83; font-size:11px; letter-spacing:.05em; text-transform:uppercase; background:#fafbfe; }
+  code, kbd { padding:2px 6px; border:1px solid #e3e9f3; border-radius:5px; background:#f4f7fd; color:#2f55ad;
+              font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+  pre { overflow-x:auto; padding:16px; border:1px solid var(--line); border-radius:11px; background:#0f2247; color:#cfe0ff;
+        font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.55; }
+  .two { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:14px; }
+  .card { padding:15px 17px; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 3px 15px rgba(21,43,80,.045); }
+  .card b { display:block; margin-bottom:4px; color:#2c3d57; font-size:14px; }
+  .card p { margin:0; font-size:13.5px; color:#66768d; }
+  footer { margin-top:34px; padding-top:16px; border-top:1px solid var(--line); color:#93a0b1; font-size:11.5px; }
+  @media (max-width:640px) { .toolbar { position:static; } p { text-align:left; } }
+  @media print {
+    @page { margin:16mm; }
+    body { background:#fff; font-size:11.5pt; line-height:1.6; }
+    .toolbar, .no-print { display:none !important; }
+    header.cover { padding:0 0 14px; color:#000; background:none; }
+    header h1 { font-size:24pt; color:#000; }
+    header h1 span, header p, header .meta { color:#333; }
+    header .meta { border-top:1px solid #ccc; }
+    .card, table, .note, pre { break-inside:avoid; }
+    h2 { break-after:avoid; }
+    pre { background:#f7f7f7; color:#000; border:1px solid #ccc; }
+    a { color:inherit; text-decoration:none; }
+  }
+</style>
+</head>
+<body>
+<header class="cover">
+  <div class="wrap">
+    <span class="mark"><i>QR</i> qrattendance</span>
+    <h1>Background of the Study<br><span>QR-Based Class Attendance Monitoring System</span></h1>
+    <p>Web-based documentation — rationale, blueprint, software development tools and software development phases.</p>
+    <div class="meta"><span>Format: Outline 1–4</span><span>Implementation: Web-based</span><span id="printed"></span></div>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+  <div class="toolbar no-print">
+    <button class="btn primary" onclick="window.print()">Print</button>
+    <button class="btn" onclick="window.location.href='background-web.html'">Reload</button>
+    <a class="btn" href="../settings.php">Back to settings</a>
+  </div>
+
+  <section id="rationale">
+    <h2><em>1</em> Rationale</h2>
+    <p class="lead">Class attendance is one of the first indicators of student engagement, yet it is still one of the most time-consuming rituals in the classroom. In the conventional approach, a professor calls out names section by section, or passes a paper sheet from row to row and waits for signatures. Depending on class size, this consumes an average of five to ten minutes of every meeting. Over one semester with three meetings per week and sixteen weeks, a single section can lose roughly four hours of instruction time — time that is already at a premium in a compressed academic calendar.</p>
+
+    <p>Beyond lost instructional time, conventional attendance has deeper structural weaknesses. Handwritten sheets are difficult to read, easy to lose, and impossible to aggregate quickly. Computing a student's attendance percentage across several subjects, sections and semesters becomes a manual, error-prone exercise of transcribing paper into a spreadsheet. Records requested by the registrar or the academic office are often delayed because the source documents are distributed across dozens of filing folders.</p>
+
+    <p>Attendance records are also used for academic decisions — students whose attendance falls below an institutional threshold may be disqualified from major examinations or deferred from graduation. A record that cannot be verified, dated, or audited therefore carries less weight. The conventional process also permits proxy attendance, where one student signs for another, and backdating, where an incorrect entry is made after the fact without any trace. Neither problem can be resolved by paper.</p>
+
+    <p>Schools have steadily adopted learning management systems, online enrollment and digital grade books, so it is consistent — rather than novel — to bring attendance into the same digital record. Two technologies make this practical today. The <b>Quick Response (QR) code</b>, standardised under ISO/IEC 18004, carries information that is inexpensive to generate, readable by an ordinary phone or laptop camera, and impossible to memorise or forge by eye. The <b>RFID card</b>, carried by most institutions as a school ID, allows a check-in with no phone at all: a student taps the card on a reader at the classroom door. Both approaches remove the human bottleneck and produce a time-stamped, attributable record.</p>
+
+    <p>The study therefore proposes and develops <b>QRAttendance</b>, a web-based class attendance monitoring system for a single professor with two roles — professor and student. The system organises a school year into terms, subjects, sections and schedules; imports a class list from a CSV file; issues section enrolment QR codes; generates time-limited, single-use attendance QR passes; scans those passes with the device camera; and accepts taps from an ESP32-based RFID reader. Every check-in is written to a database with the date, time and method used, so attendance can be reviewed, filtered by academic term and exported for reporting. In doing so, the study addresses the concrete inefficiencies of manual attendance while producing a defensible institutional record.</p>
+
+    <div class="note"><b>Problem statement:</b> conventional attendance consumes instructional time, produces records that are hard to verify, aggregate and report, and cannot prevent proxy attendance — a web-based system using QR codes and RFID is needed to make attendance fast, accurate and auditable.</div>
+  </section>
+
+  <section id="blueprint">
+    <h2><em>2</em> Blueprint</h2>
+    <p>The system follows a <b>three-tier client–server architecture</b> with an added IoT input layer. The presentation tier is the browser; the logic tier is a set of PHP scripts and JSON endpoints; the data tier is a MySQL/MariaDB database. The ESP32 reader is a thin client that only authenticates with a device token and posts events — it stores no attendance data of its own.</p>
+
+    <pre>
+┌────────────────────────────┐  ┌────────────────────────────┐
+│  PRESENTATION — browsers   │  │   IOT INPUT — ESP32 door   │
+│  login · dashboard · class │  │  MFRC522 · OLED · buzzer   │
+│  roster · scanner · reports│  │  reads school-ID card UID  │
+│  HTML / CSS / vanilla JS   │  │  Arduino (WiFiManager)     │
+└─────────────┬──────────────┘  └──────────────┬─────────────┘
+              │ HTTPS (forms, JSON)            │ HTTPS / JSON + device token
+              └───────────────┬────────────────┘
+                              ▼
+┌───────────────────────────────────────────────────────────────────┐
+│  LOGIC TIER — Apache + PHP 8.2 (PDO prepared statements)         │
+│  auth / sessions · terms · subjects · sections · schedules       │
+│  roster CSV · enrolment QR · session QR · check-in validator     │
+│  RFID endpoints (pair · check-in · heartbeat) · reports          │
+└───────────────────────────────┬───────────────────────────────────┘
+                                ▼
+┌───────────────────────────────────────────────────────────────────┐
+│  DATA TIER — MySQL / MariaDB                                     │
+│  users · terms · subjects · sections · section_schedules         │
+│  students · class_sessions · qr_tokens · attendance · rfid_*     │
+└───────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.1 Modules</h3>
+    <div class="two">
+      <div class="card"><b>Authentication</b><p>Email + password, hashed with <code>password_hash()</code>, session regeneration on login, 30-day “keep me signed in”, role-based redirect.</p></div>
+      <div class="card"><b>Academic setup</b><p>School year and semester, subjects, sections, and per-day schedules with conflict validation.</p></div>
+      <div class="card"><b>Roster management</b><p>CSV import/export, manual add, edit and delete, unique student ID per section.</p></div>
+      <div class="card"><b>Enrolment</b><p>A section QR code; students scan it, sign in and enter their student ID to join.</p></div>
+      <div class="card"><b>Attendance (QR)</b><p>Time-limited, single-use pass per student; scanned by the browser camera through jsQR.</p></div>
+      <div class="card"><b>Attendance (RFID)</b><p>ESP32 reader posts the hashed card UID; server validates session, section and rate limits.</p></div>
+      <div class="card"><b>Reports</b><p>History filtered by school year and semester, QR/RFID method badges, CSV export.</p></div>
+      <div class="card"><b>Isolation</b><p>Data is owned by <code>terms.professor_id</code>; every query is scoped to the signed-in professor.</p></div>
+    </div>
+
+    <h3>2.2 QR attendance data flow</h3>
+    <ol>
+      <li>Student opens their dashboard while a session is open and requests a pass.</li>
+      <li>The server creates a random 32-byte token, stores only its SHA-256 hash with a 90-second expiry, and returns the token to be rendered as a QR image.</li>
+      <li>The professor's browser camera reads the code (<code>jsQR</code>) and posts it to the check-in endpoint.</li>
+      <li>The server validates hash, expiry, single-use flag, session ownership and section membership.</li>
+      <li><code>INSERT IGNORE INTO attendance</code> records the check-in — the unique key on <code>(session_id, student_id)</code> makes a duplicate a no-op.</li>
+      <li>The response is displayed and the roster refreshes.</li>
+    </ol>
+
+    <div class="note"><b>Security layers:</b> password hashing, session regeneration, CSRF tokens on every form, hashed one-time QR tokens, per-device User-Agent checks, constant-time token comparison, a 30 taps/minute rate limit, and professor-scoped queries throughout.</div>
+  </section>
+
+  <section id="tools">
+    <h2><em>3</em> Software Development Tools</h2>
+    <p>The web implementation uses no framework and no front-end build step, so the application can be deployed by copying files to shared hosting — the deployment target chosen for this study.</p>
+    <table>
+      <tr><th>Category</th><th>Tool</th><th>Purpose in the study</th></tr>
+      <tr><td>Back-end language</td><td><b>PHP 8.2</b></td><td>Business logic, sessions, forms and JSON endpoints</td></tr>
+      <tr><td>Database</td><td><b>MySQL 5.7/8.0 or MariaDB 10.x</b></td><td>Persistent storage for users, classes, rosters and attendance</td></tr>
+      <tr><td>Database access</td><td><b>PDO</b> prepared statements</td><td>Parameterised queries — the sole SQL access method (no concatenation)</td></tr>
+      <tr><td>Markup</td><td><b>HTML5</b></td><td>Semantic forms, tables and dialogs</td></tr>
+      <tr><td>Styling</td><td><b>CSS3</b> — Grid, Flexbox, <code>clamp()</code>, custom properties</td><td>Responsive layout from 320 px to large monitors; print styles for documents</td></tr>
+      <tr><td>Behaviour</td><td><b>Vanilla JavaScript</b> (ES2017+)</td><td>Modals, polling, countdowns, live widgets — no framework, no bundler</td></tr>
+      <tr><td>Icons</td><td><b>Lucide</b> v1.50 (CDN)</td><td>Consistent outline icon set shared with the prototype</td></tr>
+      <tr><td>QR generation</td><td><b>chillerlan/php-qrcode</b> v6 via Composer</td><td>Renders enrolment QR codes on the server</td></tr>
+      <tr><td>QR reading</td><td><b>jsQR</b> v1.4 + <code>getUserMedia</code></td><td>Reads student passes in the browser camera</td></tr>
+      <tr><td>CSV</td><td>PHP <code>fgetcsv()</code> / <code>fputcsv()</code></td><td>Roster import and report export, with formula-injection protection</td></tr>
+      <tr><td>Web server</td><td><b>Apache</b> (shared hosting) + HTTPS</td><td>Deployment host; HTTPS is required for camera access</td></tr>
+      <tr><td>Database GUI</td><td><b>phpMyAdmin</b></td><td>Schema import and migrations</td></tr>
+      <tr><td>Editor / VCS</td><td><b>VS Code</b>, <b>Git</b></td><td>Source control and version history</td></tr>
+      <tr><td>Embedded</td><td><b>Arduino IDE 2.x</b> + <b>ESP32</b> toolchain</td><td>Flashing the RFID reader firmware</td></tr>
+      <tr><td>Firmware libraries</td><td><b>MFRC522</b> 1.4.11, <b>Adafruit SSD1306</b> 2.5.13, <b>Adafruit GFX</b> 1.11.11, <b>ArduinoJson</b> 7, <b>WiFiManager</b> 2.0.17</td><td>Card reading, display, JSON and Wi-Fi provisioning</td></tr>
+    </table>
+  </section>
+
+  <section id="phases">
+    <h2><em>4</em> Software Development Phases</h2>
+    <p>The project followed the <b>Systems Development Life Cycle (SDLC)</b>, applied in a linear sequence with short iterative cycles inside the implementation phase — a waterfall outline with incremental construction.</p>
+
+    <h3>Phase 1 — Planning and Scoping</h3>
+    <p>Defined the problem: attendance time, record accuracy and auditability. Set the boundaries — one professor, two roles, school year through semester down to section level, QR as the primary check-in and RFID as an optional second channel. Produced the feature list used as the project requirement baseline.</p>
+
+    <h3>Phase 2 — Requirements Analysis</h3>
+    <p>Functional requirements: authentication and role redirects; school year and semester; subject, section and schedule creation with conflict rules; manual and CSV roster management; section enrolment QR; time-limited student QR passes; camera scanning; RFID enrolment, pairing and check-in; history filtered by term; CSV export. Non-functional requirements: mobile-first responsiveness, HTTPS, password hashing, CSRF protection, hashed one-time tokens, and a target response time under two seconds for a check-in.</p>
+
+    <h3>Phase 3 — Design</h3>
+    <p>Produced the entity–relationship design (users, terms, subjects, sections, section_schedules, students, class_sessions, qr_tokens, attendance, rfid_readers, pairing_tokens), the interface blueprint (navy sidebar, cards, tables that collapse into stacked cards), and the request contract for every JSON endpoint. Data ownership was designed at the start by anchoring every record to <code>terms.professor_id</code>.</p>
+
+    <h3>Phase 4 — Implementation</h3>
+    <p>Built in dependency order: (1) authentication and session handling, (2) academic setup, (3) roster and CSV, (4) enrolment QR and QR passes, (5) camera scanning, (6) history and export, (7) RFID endpoints and firmware, (8) documentation. Each unit was reviewed against the requirements before the next began.</p>
+
+    <h3>Phase 5 — Testing</h3>
+    <p>Verified functional behaviour (login roles, CRUD, CSV round-trip, QR expiry, duplicate check-in, schedule conflicts, professor isolation), cross-device responsiveness at 320 px, 640 px, 1024 px and 1920 px, and security cases (CSRF rejection, expired token rejection, cross-professor data access denial, rate limiting). User acceptance testing was conducted with a sample class.</p>
+
+    <h3>Phase 6 — Deployment</h3>
+    <p>Created the database through phpMyAdmin, uploaded the application, enabled HTTPS, ran the one-click migration page, and verified the camera scanner and the ESP32 reader against the live host.</p>
+
+    <h3>Phase 7 — Maintenance and Evaluation</h3>
+    <p>Monitored errors and feedback, adjusted schedules and copy, and kept the documentation in sync with the running system. The manual ships with the application so users can consult it offline and print it.</p>
+
+    <div class="note"><b>Outcome:</b> an operational web-based system where attendance that previously took minutes per meeting is recorded in under two seconds, with every entry time-stamped, attributable and exportable by academic term.</div>
+  </section>
+
+  <footer>QRAttendance · Background of the Study · Web-based implementation</footer>
+</main>
+</div>
+<script>
+  document.getElementById('printed').textContent = 'Printed on ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+</script>
+</body>
+</html>

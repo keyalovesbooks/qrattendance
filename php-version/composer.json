@@ -1,0 +1,10 @@
+{
+  "name": "school/qr-attendance",
+  "description": "QR Code-Based Class Attendance Monitoring System",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "ext-pdo": "*",
+    "chillerlan/php-qrcode": "^6.0"
+  }
+}
